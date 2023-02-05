@@ -141,6 +141,13 @@
     />
     <SidebarItem
       on:clicked={close}
+      active={segment === 'weeklyboss'}
+      image="/images/weekly_boss.png"
+      label="Weekly Boss"
+      href="/weeklyboss"
+    />
+    <SidebarItem
+      on:clicked={close}
       active={segment === 'settings'}
       image="/images/settings.png"
       label={$t('sidebar.settings')}
