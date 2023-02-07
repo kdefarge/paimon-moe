@@ -3,7 +3,10 @@
   import Button from '../../components/Button.svelte';
   import Icon from '../../components/Icon.svelte';
   import { mdiMinus, mdiPlus } from '@mdi/js';
+  import { weeklyboss } from '../../data/weeklyboss';
+
   $: chars = Object.entries(characters);
+  $: bossList = Object.entries(weeklyboss);
   
   let randomEvent = 0;
   
@@ -29,6 +32,50 @@
   <p class="text-gray-400 px-4 md:px-8 font-medium pb-4" style="margin-top: -1rem;">
     descriptions soon
   </p>
+
+  <div class="flex flex-wrap text-white text-center">
+  {#each bossList as [id, boss] (id)}
+    <div class="bg-item ml-2 px-2 mt-2 py-2 rounded-lg">
+      
+      <div class="font-semibold mx-auto text-xl">
+        {boss.name}
+        <!-- <img class="block h-24 rounded-full mx-auto" src={`/images/characters/${id}.png`} alt="{char.name}">
+        <img class="block h-24 rounded-lg mx-auto" src={`/images/items/${char.material.boss.id}.png`} alt="{char.name}"> -->
+      </div>
+
+      <table class="table-auto">
+        <thead>
+          <tr>
+            <th class="w-64">Item name</th>
+            <th class="w-24">Icon</th>
+            <th>used</th>
+            <th>diff</th>
+            <th>wanted</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each Object.entries(boss.unique_drop) as [id, item] (id)}
+          <tr>
+            <td>{item.name}</td>
+            <td><img class="block h-12 rounded-full mx-auto" src={`/images/items/${item.id}.png`} alt="{item.name}"></td>
+            <td>
+              <p class="mx-2 bg-background rounded-xl text-bold text-white py-4 w-16 text-center">{randomEvent} / 99</p>
+            </td>
+            <td>
+              <p class="mx-2 bg-background rounded-xl text-bold text-white py-4 w-16 text-center">{randomEvent}</p>
+            </td>
+            <td>
+              <p class="mx-2 bg-background rounded-xl text-bold text-white py-4 w-16 text-center">{randomEvent}</p>
+            </td>
+          </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  {/each}
+  </div>
+
+  <h2 class="font-display px-4 md:px-8 font-black text-4xl text-white">Talents</h2>
 
   <div class="flex flex-wrap text-white text-center">
   {#each chars as [id, char] (id)}
