@@ -35,7 +35,7 @@
     bossList = Object.entries(weeklyboss);
     charactersList = Object.entries(characters);
     for (const [id, character] of charactersList) {
-      talentsCounter[character.id] = [[0,0,0],[0,0,0]];
+      talentsCounter[character.id] = [[1,1,1],[1,1,1]];
       itemsCounter[character.material.boss.id][counterType.Max]+=18;
     }
     readLocalData();
@@ -60,7 +60,7 @@
   
   function talentsLvlPull(character,talent,counter = counterType.Unlock) {
     let talentLvl = talentsCounter[character][counter][talent];
-    if(talentLvl<1)
+    if(talentLvl<=1)
         return;
     
     talentLvl--;
