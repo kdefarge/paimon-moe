@@ -5,6 +5,9 @@
   import { mdiMinus, mdiPlus } from '@mdi/js';
   import { weeklyboss } from '../../data/weeklyboss';
   import { onMount } from 'svelte';
+  import debounce from 'lodash.debounce';
+  import { getAccountPrefix } from '../../stores/account';
+  import { readSave, updateSave, fromRemote } from '../../stores/saveManager';
 
   const talents = {
     NormalAttack: 0,
@@ -35,6 +38,7 @@
       talentsCounter[character.id] = [[0,0,0],[0,0,0]];
       itemsCounter[character.material.boss.id][counterType.Max]+=18;
     }
+    readLocalData();
   });
 
   function talentsLvlPush(character,talent,counter = counterType.Unlock) {
@@ -50,6 +54,7 @@
 
     talentsCounter[character][counter][talent] = talentLvl;
     bossweeklyCalculator();
+    saveData();
   }
 
   
@@ -66,6 +71,7 @@
 
     talentsCounter[character][counter][talent] = talentLvl;
     bossweeklyCalculator();
+    saveData();
   }
 
   function bossweeklyCalculator() {
@@ -107,6 +113,28 @@
     return 0;
   }
 
+  const saveData = debounce(async () => {
+    const data = talentsCounter;
+    const prefix = getAccountPrefix();
+    await updateSave(`${prefix}weeklyboss`, data);
+  }, 2000);
+  
+  async function readLocalData() {
+    const prefix = getAccountPrefix();
+    const weeklyboosData = await readSave(`${prefix}weeklyboss`);
+    for (const [id, character] of charactersList) {
+      for (const [id, talent] of Object.entries(talents)) {
+        talentsCounter[character.id][counterType.Unlock][talent] = weeklyboosData[character.id][counterType.Unlock][talent];
+        talentsCounter[character.id][counterType.Wanted][talent] = weeklyboosData[character.id][counterType.Wanted][talent];
+      }
+    }
+    bossweeklyCalculator();
+  }
+
+  $: if ($fromRemote) {
+    console.log('update from google drive');
+    readLocalData();
+  }
 </script>
 
 <svelte:head>
