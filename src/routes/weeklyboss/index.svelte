@@ -114,18 +114,25 @@
   }
 
   const saveData = debounce(async () => {
-    const data = talentsCounter;
+    const wbdata = {};
+    for (const [characterid, character] of charactersList) {
+      wbdata[characterid] = [[],[]];
+      for (const [talentid, talent] of Object.entries(talents)) {
+        wbdata[characterid][counterType.Unlock][talent] = talentsCounter[characterid][counterType.Unlock][talent];
+        wbdata[characterid][counterType.Wanted][talent] = talentsCounter[characterid][counterType.Wanted][talent];
+      }
+    }
     const prefix = getAccountPrefix();
-    await updateSave(`${prefix}weeklyboss`, data);
+    await updateSave(`${prefix}weeklyboss`, wbdata);
   }, 2000);
   
   async function readLocalData() {
     const prefix = getAccountPrefix();
-    const weeklyboosData = await readSave(`${prefix}weeklyboss`);
-    for (const [id, character] of charactersList) {
-      for (const [id, talent] of Object.entries(talents)) {
-        talentsCounter[character.id][counterType.Unlock][talent] = weeklyboosData[character.id][counterType.Unlock][talent];
-        talentsCounter[character.id][counterType.Wanted][talent] = weeklyboosData[character.id][counterType.Wanted][talent];
+    const wbdata = await readSave(`${prefix}weeklyboss`);
+    for (const [characterid, character] of charactersList) {
+      for (const [talentid, talent] of Object.entries(talents)) {
+        talentsCounter[characterid][counterType.Unlock][talent] = wbdata[characterid][counterType.Unlock][talent];
+        talentsCounter[characterid][counterType.Wanted][talent] = wbdata[characterid][counterType.Wanted][talent];
       }
     }
     bossweeklyCalculator();
