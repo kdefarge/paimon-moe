@@ -114,7 +114,7 @@
   }
 
   const saveData = debounce(async () => {
-    const wbdata = {};
+    let wbdata = {};
     for (const [characterid, character] of charactersList) {
       wbdata[characterid] = [[],[]];
       for (const [talentid, talent] of Object.entries(talents)) {
@@ -129,7 +129,7 @@
   async function readLocalData() {
     const prefix = getAccountPrefix();
     const wbdata = await readSave(`${prefix}weeklyboss`);
-    for (const [characterid, character] of charactersList) {
+    for (const [characterid, character] of Object.entries(wbdata)) {
       for (const [talentid, talent] of Object.entries(talents)) {
         talentsCounter[characterid][counterType.Unlock][talent] = wbdata[characterid][counterType.Unlock][talent];
         talentsCounter[characterid][counterType.Wanted][talent] = wbdata[characterid][counterType.Wanted][talent];
